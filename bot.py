@@ -167,7 +167,7 @@ def build_start_fail_embed() -> discord.Embed:
 def build_not_authorized_embed() -> discord.Embed:
     embed = discord.Embed(
         title="يجب التفعيل أولاً ❌",
-        description=" عن طريق استخدام الامر:\n`/start "الكود السري"`",
+        description=" عن طريق استخدام الامر:\n`/start الكود السري`",
         color=0xe74c3c
     )
     embed.set_footer(text="𝕺𝖓𝖎 Games")
