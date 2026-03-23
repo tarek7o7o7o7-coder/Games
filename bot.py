@@ -1,3 +1,4 @@
+import os
 import re
 import asyncio
 from urllib.parse import quote_plus, urljoin
@@ -11,7 +12,7 @@ from discord.ext import commands
 # =========================
 # الإعدادات
 # =========================
-DISCORD_TOKEN = "PUT_YOUR_NEW_BOT_TOKEN_HERE"
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 BASE_URL = "https://vpesports.com/sharedsteam"
 VIDEO_URL = "https://drive.google.com/file/d/1_axgvGNRUJ2Ej05YO4wrtDJvLU7OuQHw/view?usp=sharing"
 START_CODE = "1973"
