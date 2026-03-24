@@ -29,6 +29,10 @@ authorized_users = set()
 # =========================
 # أدوات مساعدة
 # =========================
+def is_dm(interaction: discord.Interaction) -> bool:
+    return interaction.guild is None
+
+
 def fetch_page(url: str) -> str:
     headers = {
         "User-Agent": "Mozilla/5.0"
@@ -167,8 +171,18 @@ def build_start_fail_embed() -> discord.Embed:
 def build_not_authorized_embed() -> discord.Embed:
     embed = discord.Embed(
         title="يجب التفعيل أولاً ❌",
-        description=" عن طريق استخدام الامر:\n`/start الكود السري`",
+        description="عن طريق استخدام الأمر:\n`/start الكود السري`",
         color=0xe74c3c
+    )
+    embed.set_footer(text="𝕺𝖓𝖎 Games")
+    return embed
+
+
+def build_dm_only_embed() -> discord.Embed:
+    embed = discord.Embed(
+        title="استخدم البوت في الخاص فقط",
+        description="راسل البوت مباشرة ثم استخدم الأوامر هناك.",
+        color=0xe67e22
     )
     embed.set_footer(text="𝕺𝖓𝖎 Games")
     return embed
@@ -197,19 +211,8 @@ def build_found_embed(game_name: str, page_url: str) -> discord.Embed:
         value=(
             "1) سجّل دخولك بحسابك في الموقع.\n"
             "2) افتح صفحة اللعبة المطلوبة.\n"
-            "3) اضغط على Get Account ثم Play Game.\n"
-            "4) شاهد الإعلان حتى يظهر لك الكود، ثم انسخه.\n"
-            "5) تأكّد أن لديك حساب تيليجرام.\n"
-            "6) ابحث عن البوت @LootAccessBot وافتحه.\n"
-            "7) اكتب الأمر /start داخل البوت.\n"
-            "8) بعد ذلك، أرسل الكود الذي نسخته.\n"
-            "9) ستظهر لك بيانات الحساب، ومنها اسم الحساب والرمز.\n"
-            "10) افتح Steam وسجّل الدخول باستخدام البيانات الظاهرة.\n"
-            "11) إذا طلب منك Steam كود تأكيد، ارجع إلى البوت.\n"
-            "12) اضغط على Next ثم Get Code.\n"
-            "13) انسخ الكود الجديد بسرعة وأدخله في Steam.\n"
-            "14) بعد تسجيل الدخول، افتح الحساب وحمّل اللعبة.\n"
-            "15) بعد انتهاء التحميل، فعّل Offline Mode لتجربة أفضل."
+            "3) أكمل الخطوات الظاهرة داخل الموقع يدويًا.\n"
+            "4) شاهد فيديو الشرح عند الحاجة."
         ),
         inline=False
     )
@@ -258,6 +261,13 @@ async def on_ready():
 @bot.tree.command(name="start", description="تفعيل البوت")
 @app_commands.describe(code="اكتب رمز التفعيل")
 async def start_command(interaction: discord.Interaction, code: str):
+    if not is_dm(interaction):
+        await interaction.response.send_message(
+            embed=build_dm_only_embed(),
+            ephemeral=True
+        )
+        return
+
     if code == START_CODE:
         authorized_users.add(interaction.user.id)
         await interaction.response.send_message(
@@ -274,6 +284,13 @@ async def start_command(interaction: discord.Interaction, code: str):
 @bot.tree.command(name="game", description="ابحث عن لعبة في الموقع")
 @app_commands.describe(name="اكتب اسم اللعبة كامل")
 async def game_command(interaction: discord.Interaction, name: str):
+    if not is_dm(interaction):
+        await interaction.response.send_message(
+            embed=build_dm_only_embed(),
+            ephemeral=True
+        )
+        return
+
     if interaction.user.id not in authorized_users:
         await interaction.response.send_message(
             embed=build_not_authorized_embed(),
