@@ -181,7 +181,7 @@ def build_not_authorized_embed() -> discord.Embed:
 def build_dm_only_embed() -> discord.Embed:
     embed = discord.Embed(
         title="استخدم البوت في الخاص فقط",
-        description="راسل البوت مباشرة ثم استخدم الأوامر هناك.",
+        # description="راسل البوت مباشرة ثم استخدم الأوامر هناك.",
         color=0xe67e22
     )
     embed.set_footer(text="𝕺𝖓𝖎 Games")
